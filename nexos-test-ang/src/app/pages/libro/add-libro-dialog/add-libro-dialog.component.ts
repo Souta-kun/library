@@ -131,7 +131,7 @@ export class AddLibroDialogComponent implements OnInit {
                 this.toastr.warning("El autor no esta registrado");
                 return;
               }
-              if (error.error.includes("FK_Editorial_Autor_Id")) {
+              if (error.error.includes("FK_Libro_Editorial_Id")) {
                 this.toastr.warning("La editorial no esta registrada");
                 return;
               }
