@@ -5,7 +5,7 @@ import {
   MatSort,
   MatTableDataSource,
 } from "@angular/material";
-import { NgxSpinnerService } from "ngx-spinner";
+import { NgxUiLoaderService } from "ngx-ui-loader";
 import { ToastrService } from "ngx-toastr";
 import { AutorModel } from "src/app/models/autor.model";
 import { AutorService } from "src/app/services/autor.service";
@@ -32,7 +32,7 @@ export class AutorComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private spinnerService: NgxSpinnerService,
+    private spinner: NgxUiLoaderService,
     private toastr: ToastrService,
     private dialog: MatDialog,
     private autorService: AutorService
@@ -45,14 +45,14 @@ export class AutorComponent implements OnInit {
   }
 
   consultar() {
-    this.spinnerService.show();
+    this.spinner.start();
     this.autorService.select().subscribe(
       (result) => {
-        this.spinnerService.hide();
+        this.spinner.stop();
         this.dataSource.data = result;
       },
       (error) => {
-        this.spinnerService.hide();
+        this.spinner.stop();
         this.toastr.error("Error consultando datos.");
       }
     );

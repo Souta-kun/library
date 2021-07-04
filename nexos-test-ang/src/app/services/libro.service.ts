@@ -12,6 +12,8 @@ export class LibroService {
   constructor(private http: HttpClient) {}
 
   select() {
+    let libros: LibroModel[] = [];
+
     const l1 = new LibroModel();
     l1.titulo = "Alicia Wonderwold";
     l1.anio = 2010;
@@ -28,7 +30,9 @@ export class LibroService {
     l2.editorial = "Any";
     l2.autor = "David";
 
-    const libros: LibroModel[] = [l1, l2];
+    libros.push(l1);
+    libros.push(l2);
+
     return of(libros);
     // return this.http.get<LibroModel[]>(
     //   `${environment.urlApi}${CONSTANTS.CONTROLLER.Editorial}Poselectst`

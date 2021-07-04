@@ -5,11 +5,14 @@ import {
   MatSort,
   MatTableDataSource,
 } from "@angular/material";
-import { NgxSpinnerService } from "ngx-spinner";
-import { ToastrService } from "ngx-toastr";
+
 import { LibroModel } from "src/app/models/libro.model";
-import { LibroService } from "src/app/services/libro.service";
 import { CONSTANTS } from "src/app/shared/constants";
+
+import { NgxUiLoaderService } from "ngx-ui-loader";
+import { ToastrService } from "ngx-toastr";
+import { LibroService } from "src/app/services/libro.service";
+
 import { OkCancelDialogComponent } from "src/app/shared/ok-cancel-dialog/ok-cancel-dialog.component";
 import { AddLibroDialogComponent } from "./add-libro-dialog/add-libro-dialog.component";
 
@@ -34,7 +37,7 @@ export class LibroComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private spinnerService: NgxSpinnerService,
+    private spinner: NgxUiLoaderService,
     private toastr: ToastrService,
     private dialog: MatDialog,
     private libroService: LibroService
@@ -47,14 +50,14 @@ export class LibroComponent implements OnInit {
   }
 
   consultar() {
-    this.spinnerService.show();
+    this.spinner.start();
     this.libroService.select().subscribe(
       (result) => {
-        this.spinnerService.hide();
+        this.spinner.stop();
         this.dataSource.data = result;
       },
       (error) => {
-        this.spinnerService.hide();
+        this.spinner.stop();
         this.toastr.error("Error consultando datos.");
       }
     );
@@ -108,6 +111,7 @@ export class LibroComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
+        this.toastr.success("Libro eliminado.");
         this.consultar();
       }
     });

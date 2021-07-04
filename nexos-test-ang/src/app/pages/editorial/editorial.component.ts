@@ -5,7 +5,7 @@ import {
   MatSort,
   MatTableDataSource,
 } from "@angular/material";
-import { NgxSpinnerService } from "ngx-spinner";
+import { NgxUiLoaderService } from "ngx-ui-loader";
 import { ToastrService } from "ngx-toastr";
 import { EditorialModel } from "src/app/models/editorial.model";
 import { EditorialService } from "src/app/services/editorial.service";
@@ -33,7 +33,7 @@ export class EditorialComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private spinnerService: NgxSpinnerService,
+    private spinner: NgxUiLoaderService,
     private toastr: ToastrService,
     private dialog: MatDialog,
     private editorialService: EditorialService
@@ -46,14 +46,14 @@ export class EditorialComponent implements OnInit {
   }
 
   consultar() {
-    this.spinnerService.show();
+    this.spinner.start();
     this.editorialService.select().subscribe(
       (result) => {
-        this.spinnerService.hide();
+        this.spinner.stop();
         this.dataSource.data = result;
       },
       (error) => {
-        this.spinnerService.hide();
+        this.spinner.stop();
         this.toastr.error("Error consultando datos.");
       }
     );

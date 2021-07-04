@@ -1,7 +1,8 @@
-import { Component } from "@angular/core";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
+import { NgxUiLoaderService } from "ngx-ui-loader";
 
 import { CONSTANTS } from "./shared/constants";
 
@@ -10,7 +11,7 @@ import { CONSTANTS } from "./shared/constants";
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   menu = CONSTANTS.MENU;
 
   constructor(
@@ -40,6 +41,8 @@ export class AppComponent {
       sanitizer.bypassSecurityTrustHtml(CONSTANTS.ICON.CANCEL)
     );
   }
+
+  ngOnInit() {}
 
   onRedirect(url: string) {
     this.router.navigate([url], { relativeTo: this.route });

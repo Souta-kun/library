@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
@@ -21,22 +21,14 @@ import {
   MatSortModule,
   MatTabsModule,
   MatIconModule,
-  MatPaginatorIntl,
-  MAT_DIALOG_DEFAULT_OPTIONS,
-  MAT_DATE_LOCALE,
 } from "@angular/material";
-
-import { OkCancelDialogComponent } from "./ok-cancel-dialog/ok-cancel-dialog.component";
 
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ToastrModule } from "ngx-toastr";
+import { NgxUiLoaderModule } from "ngx-ui-loader";
 import "hammerjs";
 
-export function CustomPaginator() {
-  const customPaginatorIntl = new MatPaginatorIntl();
-  customPaginatorIntl.itemsPerPageLabel = "Items por pagina:";
-  return customPaginatorIntl;
-}
+import { OkCancelDialogComponent } from "./ok-cancel-dialog/ok-cancel-dialog.component";
 
 @NgModule({
   declarations: [OkCancelDialogComponent],
@@ -59,8 +51,9 @@ export function CustomPaginator() {
     MatAutocompleteModule,
     MatTooltipModule,
     // features installed
-    NgxSpinnerModule,
     ToastrModule.forRoot(),
+    NgxSpinnerModule,
+    NgxUiLoaderModule,
   ],
   exports: [
     FormsModule,
@@ -88,15 +81,8 @@ export function CustomPaginator() {
     // features installed
     ToastrModule,
     NgxSpinnerModule,
+    NgxUiLoaderModule,
   ],
   entryComponents: [OkCancelDialogComponent],
-  providers: [
-    { provide: MatPaginatorIntl, useValue: CustomPaginator() },
-    {
-      provide: MAT_DIALOG_DEFAULT_OPTIONS,
-      useValue: { hasBackdrop: true, disableClose: true },
-    },
-    { provide: MAT_DATE_LOCALE, useValue: "en-GB" },
-  ],
 })
 export class SharedModule {}
