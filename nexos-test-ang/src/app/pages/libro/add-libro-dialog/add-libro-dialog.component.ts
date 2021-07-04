@@ -48,10 +48,24 @@ export class AddLibroDialogComponent implements OnInit {
     } Libro`;
 
     this.form = new FormGroup({
-      titulo: new FormControl(data.data.titulo, [Validators.required]),
-      anio: new FormControl(data.data.anio, [Validators.required]),
-      genero: new FormControl(data.data.genero, [Validators.required]),
-      npaginas: new FormControl(data.data.npaginas, [Validators.required]),
+      titulo: new FormControl(data.data.titulo, [
+        Validators.required,
+        Validators.maxLength(150),
+      ]),
+      anio: new FormControl(data.data.anio, [
+        Validators.required,
+        Validators.min(0),
+        Validators.max(9999),
+      ]),
+      genero: new FormControl(data.data.genero, [
+        Validators.required,
+        Validators.maxLength(150),
+      ]),
+      npaginas: new FormControl(data.data.npaginas, [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(2000000),
+      ]),
       editorial: new FormControl(data.data.editorialId, [Validators.required]),
       autor: new FormControl(data.data.autorId, [Validators.required]),
     });

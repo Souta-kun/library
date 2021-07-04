@@ -40,12 +40,21 @@ export class AddAutorDialogComponent implements OnInit {
     } Autor`;
 
     this.form = new FormGroup({
-      nombre: new FormControl(data.data.nombre, [Validators.required]),
+      nombre: new FormControl(data.data.nombre, [
+        Validators.required,
+        Validators.maxLength(250),
+      ]),
       fechaNacimiento: new FormControl(data.data.fechaNacimiento, [
         Validators.required,
       ]),
-      ciudad: new FormControl(data.data.ciudad, [Validators.required]),
-      correo: new FormControl(data.data.correo, [Validators.required]),
+      ciudad: new FormControl(data.data.ciudad, [
+        Validators.required,
+        Validators.maxLength(50),
+      ]),
+      correo: new FormControl(data.data.correo, [
+        Validators.required,
+        Validators.maxLength(150),
+      ]),
     });
   }
 

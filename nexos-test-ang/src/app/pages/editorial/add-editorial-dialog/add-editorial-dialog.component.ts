@@ -41,15 +41,26 @@ export class AddEditorialDialogComponent implements OnInit {
     } Editorial`;
 
     this.form = new FormGroup({
-      nombre: new FormControl(data.data.nombre, [Validators.required]),
+      nombre: new FormControl(data.data.nombre, [
+        Validators.required,
+        Validators.maxLength(250),
+      ]),
       direccionCorrespondencia: new FormControl(
         data.data.direccionCorrespondencia,
-        [Validators.required]
+        [Validators.required, Validators.maxLength(250)]
       ),
-      telefono: new FormControl(data.data.telefono, [Validators.required]),
-      correo: new FormControl(data.data.correo, [Validators.required]),
+      telefono: new FormControl(data.data.telefono, [
+        Validators.required,
+        Validators.maxLength(15),
+      ]),
+      correo: new FormControl(data.data.correo, [
+        Validators.required,
+        Validators.maxLength(150),
+      ]),
       maxLibroRegistrado: new FormControl(data.data.maxLibroRegistrado, [
         Validators.required,
+        Validators.min(-1),
+        Validators.max(2000000),
       ]),
     });
   }
