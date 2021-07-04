@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace nexos_test_netcore
+namespace Libreria.API
 {
     public class Startup
     {
@@ -30,7 +30,7 @@ namespace nexos_test_netcore
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "nexos_test_netcore", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Libreria.API", Version = "v1" });
             });
         }
 
@@ -41,7 +41,7 @@ namespace nexos_test_netcore
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "nexos_test_netcore v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Libreria.API v1"));
             }
 
             app.UseHttpsRedirection();

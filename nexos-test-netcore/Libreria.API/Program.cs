@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace nexos_test_netcore
+namespace Libreria.API
 {
     public class Program
     {
