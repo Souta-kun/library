@@ -91,6 +91,22 @@ export class LibroComponent implements OnInit {
     );
   }
 
+  getAutor(id: number) {
+    var autor = this.autores.find((item) => item.id == id);
+    if (autor) {
+      return autor.nombre;
+    }
+    return null;
+  }
+
+  getEditorial(id: number) {
+    var editorial = this.editoriales.find((item) => item.id == id);
+    if (editorial) {
+      return editorial.nombre;
+    }
+    return null;
+  }
+
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
