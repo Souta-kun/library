@@ -8,10 +8,10 @@ namespace Libreria.DTO.Entity
     public class AutorEntity
     {
         [Key]
-        public int id { get; set; }
-        public string nombre { get; set; }
-        public DateTime fechaNacimiento { get; set; }
-        public string ciudad { get; set; }
-        public string correo { get; set; }
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public DateTime FechaNacimiento { get; set; }
+        public string Ciudad { get; set; }
+        public string Correo { get; set; }
     }
 }

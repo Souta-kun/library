@@ -9,20 +9,11 @@ namespace Libreria.BLL.Services
 {
     public class LibroService : IService<LibroEntity>
     {
-        private static LibroService instancia;
-        private static LibroRepository repo;
+        private readonly LibroRepository repo;
 
-        public static LibroService Intancia
+        public LibroService(string connection)
         {
-            get
-            {
-                if (instancia == null)
-                {
-                    instancia = new LibroService();
-                    repo = new LibroRepository();
-                }
-                return instancia;
-            }
+            repo = new LibroRepository(connection);
         }
 
         public void Adicionar(LibroEntity entity)

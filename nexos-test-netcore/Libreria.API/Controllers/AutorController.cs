@@ -1,7 +1,9 @@
-﻿using Libreria.BLL.Services;
+﻿using Libreria.API.Services;
+using Libreria.BLL.Services;
 using Libreria.DTO.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,45 +19,42 @@ namespace Libreria.API.Controllers
     public class AutorController : ControllerBase
     {
         private readonly ILogger<LibroController> _logger;
+        private readonly IOptions<MyAppSettings> _options;
+        private readonly AutorService AutorService;
 
-        public AutorController(ILogger<LibroController> logger)
+        public AutorController(ILogger<LibroController> logger, IOptions<MyAppSettings> options)
         {
             _logger = logger;
+            _options = options;
+            AutorService = new AutorService(_options.Value.SQLServerConnection);
         }
 
         [HttpGet]
-        public HttpResponseMessage Seleccionar()
+        [Route("Seleccionar")]
+        public IEnumerable<AutorEntity> Seleccionar()
         {
-            var result = AutorService.Intancia.Seleccionar();
-
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(result))
-            };
+            return AutorService.Seleccionar();
         }
 
         [HttpPost]
-        public HttpResponseMessage Adicionar(AutorEntity entity)
+        [Route("Adicionar")]
+        public void Adicionar(AutorEntity entity)
         {
-            AutorService.Intancia.Adicionar(entity);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            AutorService.Adicionar(entity);
         }
 
         [HttpPost]
-        public HttpResponseMessage Editar(AutorEntity entity)
+        [Route("Editar")]
+        public void Editar(AutorEntity entity)
         {
-            AutorService.Intancia.Editar(entity);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            AutorService.Editar(entity);
         }
 
         [HttpDelete]
-        public HttpResponseMessage Eliminar(int id)
+        [Route("Eliminar")]
+        public void Eliminar(int id)
         {
-            AutorService.Intancia.Eliminar(id);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            AutorService.Eliminar(id);
         }
     }
 }

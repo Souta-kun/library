@@ -1,7 +1,9 @@
-﻿using Libreria.BLL.Services;
+﻿using Libreria.API.Services;
+using Libreria.BLL.Services;
 using Libreria.DTO.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,45 +19,42 @@ namespace Libreria.API.Controllers
     public class LibroController : ControllerBase
     {
         private readonly ILogger<LibroController> _logger;
+        private readonly IOptions<MyAppSettings> _options;
+        private readonly LibroService LibroService;
 
-        public LibroController(ILogger<LibroController> logger)
+        public LibroController(ILogger<LibroController> logger, IOptions<MyAppSettings> options)
         {
             _logger = logger;
+            _options = options;
+            LibroService = new LibroService(_options.Value.SQLServerConnection);
         }
 
         [HttpGet]
-        public HttpResponseMessage Seleccionar()
+        [Route("Seleccionar")]
+        public IEnumerable<LibroEntity> Seleccionar()
         {
-            var result = LibroService.Intancia.Seleccionar();
-
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(result))
-            };
+            return LibroService.Seleccionar();
         }
 
         [HttpPost]
-        public HttpResponseMessage Adicionar(LibroEntity entity)
+        [Route("Adicionar")]
+        public void Adicionar(LibroEntity entity)
         {
-            LibroService.Intancia.Adicionar(entity);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            LibroService.Adicionar(entity);
         }
 
         [HttpPost]
-        public HttpResponseMessage Editar(LibroEntity entity)
+        [Route("Editar")]
+        public void Editar(LibroEntity entity)
         {
-            LibroService.Intancia.Editar(entity);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            LibroService.Editar(entity);
         }
 
         [HttpDelete]
-        public HttpResponseMessage Eliminar(int id)
+        [Route("Eliminar")]
+        public void Eliminar(int id)
         {
-            LibroService.Intancia.Eliminar(id);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            LibroService.Eliminar(id);
         }
     }
 }

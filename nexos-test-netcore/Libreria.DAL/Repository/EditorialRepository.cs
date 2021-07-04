@@ -10,25 +10,20 @@ namespace Libreria.DAL.Repository
 {
     public class EditorialRepository : IRepository<EditorialEntity>
     {
-        private readonly Context _context;
+        private readonly string _connection;
 
-        public EditorialRepository() { }
-
-        EditorialRepository(Context context)
-        {
-            _context = context;
-        }
+        public EditorialRepository(string connection) { _connection = connection; }
 
         public void Adicionar(EditorialEntity entity)
         {
-            using (var context = new Context())
+            using (var context = new Context(_connection))
             {
                 var data = new EditorialEntity();
-                data.nombre = entity.nombre;
-                data.direccionCorrespondencia = entity.direccionCorrespondencia;
-                data.telefono = entity.telefono;
-                data.correo = entity.correo;
-                data.maxLibroRegistrado = entity.maxLibroRegistrado;
+                data.Nombre = entity.Nombre;
+                data.DireccionCorrespondencia = entity.DireccionCorrespondencia;
+                data.Telefono = entity.Telefono;
+                data.Correo = entity.Correo;
+                data.MaxLibroRegistrado = entity.MaxLibroRegistrado;
 
                 context.Editorial.Add(data);
 
@@ -38,14 +33,28 @@ namespace Libreria.DAL.Repository
 
         public void Editar(EditorialEntity entity)
         {
-            throw new NotImplementedException();
+            using (var context = new Context(_connection))
+            {
+                var entidad = context.Editorial.FirstOrDefault(item => item.Id == entity.Id);
+
+                if (entidad != null)
+                {
+                    entidad.Nombre = entity.Nombre;
+                    entidad.DireccionCorrespondencia = entity.DireccionCorrespondencia;
+                    entidad.Telefono = entity.Telefono;
+                    entidad.Correo = entity.Correo;
+                    entidad.MaxLibroRegistrado = entity.MaxLibroRegistrado;
+
+                    context.SaveChanges();
+                }
+            }
         }
 
         public void Eliminar(int id)
         {
-            using (var context = new Context())
+            using (var context = new Context(_connection))
             {
-                var entitad = context.Editorial.Where(data => data.id == id).FirstOrDefault();
+                var entitad = context.Editorial.Where(data => data.Id == id).FirstOrDefault();
                 context.Editorial.Remove(entitad);
                 context.SaveChanges();
             }
@@ -53,14 +62,14 @@ namespace Libreria.DAL.Repository
 
         public List<EditorialEntity> Seleccionar()
         {
-            List<EditorialEntity> facturas;
+            List<EditorialEntity> items;
 
-            using (var context = new Context())
+            using (var context = new Context(_connection))
             {
-                facturas = context.Editorial.ToList();
+                items = context.Editorial.ToList();
             }
 
-            return facturas;
+            return items;
         }
     }
 }

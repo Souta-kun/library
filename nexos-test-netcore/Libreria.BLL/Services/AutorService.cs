@@ -9,20 +9,11 @@ namespace Libreria.BLL.Services
 {
     public class AutorService : IService<AutorEntity>
     {
-        private static AutorService instancia;
-        private static AutorRepository repo;
+        private readonly AutorRepository repo;
 
-        public static AutorService Intancia
+        public AutorService(string connection)
         {
-            get
-            {
-                if (instancia == null)
-                {
-                    instancia = new AutorService();
-                    repo = new AutorRepository();
-                }
-                return instancia;
-            }
+            repo = new AutorRepository(connection);
         }
 
         public void Adicionar(AutorEntity entity)

@@ -10,26 +10,21 @@ namespace Libreria.DAL.Repository
 {
     public class LibroRepository : IRepository<LibroEntity>
     {
-        private readonly Context _context;
+        private readonly string _connection;
 
-        public LibroRepository() { }
-
-        LibroRepository(Context context)
-        {
-            _context = context;
-        }
+        public LibroRepository(string connection) { _connection = connection; }
 
         public void Adicionar(LibroEntity entity)
         {
-            using (var context = new Context())
+            using (var context = new Context(_connection))
             {
                 var data = new LibroEntity();
-                data.titulo = entity.titulo;
-                data.anio = entity.anio;
-                data.genero = entity.genero;
-                data.npaginas = entity.npaginas;
-                data.editorial = entity.editorial;
-                data.autor = entity.autor;
+                data.Titulo = entity.Titulo;
+                data.Anio = entity.Anio;
+                data.Genero = entity.Genero;
+                data.Npaginas = entity.Npaginas;
+                data.EditorialId = entity.EditorialId;
+                data.AutorId = entity.AutorId;
 
                 context.Libro.Add(data);
 
@@ -44,9 +39,9 @@ namespace Libreria.DAL.Repository
 
         public void Eliminar(int id)
         {
-            using (var context = new Context())
+            using (var context = new Context(_connection))
             {
-                var entitad = context.Libro.Where(data => data.id == id).FirstOrDefault();
+                var entitad = context.Libro.Where(data => data.Id == id).FirstOrDefault();
                 context.Libro.Remove(entitad);
                 context.SaveChanges();
             }
@@ -54,14 +49,14 @@ namespace Libreria.DAL.Repository
 
         public List<LibroEntity> Seleccionar()
         {
-            List<LibroEntity> facturas;
+            List<LibroEntity> items;
 
-            using (var context = new Context())
+            using (var context = new Context(_connection))
             {
-                facturas = context.Libro.ToList();
+                items = context.Libro.ToList();
             }
 
-            return facturas;
+            return items;
         }
     }
 }

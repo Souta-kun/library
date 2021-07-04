@@ -2,30 +2,31 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.IdentityModel.Protocols;
 
 namespace Libreria.DAL.Database
 {
     public class Context : DbContext
     {
-        #region property
-        private readonly IConfiguration configuration;
-        private const string SQLSERVERConnection = "SQLServerConnection";
-        #endregion
+        private string SQLSERVERConnection;
 
         public Context(DbContextOptions<Context> contextOptions) : base(contextOptions) { }
-        public Context(IConfiguration config)
+        public Context(string connection)
         {
-            this.configuration = config;
+            SQLSERVERConnection = connection;
         }
-        public Context() { }
+        public Context()
+        {
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString(SQLSERVERConnection), builder =>
+                optionsBuilder.UseSqlServer(SQLSERVERConnection, builder =>
                 {
                     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
                 });

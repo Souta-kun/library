@@ -8,12 +8,12 @@ namespace Libreria.DTO.Entity
     public class LibroEntity
     {
         [Key]
-        public int id { get; set; }
-        public string titulo { get; set; }
-        public int anio { get; set; }
-        public string genero { get; set; }
-        public int npaginas { get; set; }
-        public int editorial { get; set; }
-        public int autor { get; set; }
+        public int Id { get; set; }
+        public string Titulo { get; set; }
+        public int Anio { get; set; }
+        public string Genero { get; set; }
+        public int Npaginas { get; set; }
+        public int EditorialId { get; set; }
+        public int AutorId { get; set; }
     }
 }

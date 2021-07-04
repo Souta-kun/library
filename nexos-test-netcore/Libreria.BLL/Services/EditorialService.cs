@@ -9,20 +9,11 @@ namespace Libreria.BLL.Services
 {
     public class EditorialService : IService<EditorialEntity>
     {
-        private static EditorialService instancia;
-        private static EditorialRepository repo;
+        private readonly EditorialRepository repo;
 
-        public static EditorialService Intancia
+        public EditorialService(string connection)
         {
-            get
-            {
-                if (instancia == null)
-                {
-                    instancia = new EditorialService();
-                    repo = new EditorialRepository();
-                }
-                return instancia;
-            }
+            repo = new EditorialRepository(connection);
         }
 
         public void Adicionar(EditorialEntity entity)

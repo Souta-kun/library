@@ -1,7 +1,9 @@
-﻿using Libreria.BLL.Services;
+﻿using Libreria.API.Services;
+using Libreria.BLL.Services;
 using Libreria.DTO.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,45 +19,42 @@ namespace Libreria.API.Controllers
     public class EditorialController : ControllerBase
     {
         private readonly ILogger<LibroController> _logger;
+        private readonly IOptions<MyAppSettings> _options;
+        private readonly EditorialService EditorialService;
 
-        public EditorialController(ILogger<LibroController> logger)
+        public EditorialController(ILogger<LibroController> logger, IOptions<MyAppSettings> options)
         {
             _logger = logger;
+            _options = options;
+            EditorialService = new EditorialService(_options.Value.SQLServerConnection);
         }
 
         [HttpGet]
-        public HttpResponseMessage Seleccionar()
+        [Route("Seleccionar")]
+        public IEnumerable<EditorialEntity> Seleccionar()
         {
-            var result = EditorialService.Intancia.Seleccionar();
-
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(result))
-            };
+            return EditorialService.Seleccionar();
         }
 
         [HttpPost]
-        public HttpResponseMessage Adicionar(EditorialEntity entity)
+        [Route("Adicionar")]
+        public void Adicionar(EditorialEntity entity)
         {
-            EditorialService.Intancia.Adicionar(entity);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            EditorialService.Adicionar(entity);
         }
 
         [HttpPost]
-        public HttpResponseMessage Editar(EditorialEntity entity)
+        [Route("Editar")]
+        public void Editar(EditorialEntity entity)
         {
-            EditorialService.Intancia.Editar(entity);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            EditorialService.Editar(entity);
         }
 
         [HttpDelete]
-        public HttpResponseMessage Eliminar(int id)
+        [Route("Eliminar")]
+        public void Eliminar(int id)
         {
-            EditorialService.Intancia.Eliminar(id);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            EditorialService.Eliminar(id);
         }
     }
 }

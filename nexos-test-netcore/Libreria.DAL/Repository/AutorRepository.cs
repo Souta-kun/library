@@ -10,24 +10,19 @@ namespace Libreria.DAL.Repository
 {
     public class AutorRepository : IRepository<AutorEntity>
     {
-        private readonly Context _context;
+        private readonly string _connection;
 
-        public AutorRepository() { }
-
-        AutorRepository(Context context)
-        {
-            _context = context;
-        }
+        public AutorRepository(string connection) { _connection = connection; }
 
         public void Adicionar(AutorEntity entity)
         {
-            using (var context = new Context())
+            using (var context = new Context(_connection))
             {
                 var data = new AutorEntity();
-                data.nombre = entity.nombre;
-                data.fechaNacimiento = entity.fechaNacimiento;
-                data.ciudad = entity.ciudad;
-                data.correo = entity.correo;
+                data.Nombre = entity.Nombre;
+                data.FechaNacimiento = entity.FechaNacimiento;
+                data.Ciudad = entity.Ciudad;
+                data.Correo = entity.Correo;
 
                 context.Autor.Add(data);
 
@@ -37,14 +32,27 @@ namespace Libreria.DAL.Repository
 
         public void Editar(AutorEntity entity)
         {
-            throw new NotImplementedException();
+            using (var context = new Context(_connection))
+            {
+                var entidad = context.Autor.FirstOrDefault(item => item.Id == entity.Id);
+
+                if (entidad != null)
+                {
+                    entidad.Nombre = entity.Nombre;
+                    entidad.FechaNacimiento = entity.FechaNacimiento;
+                    entidad.Ciudad = entity.Ciudad;
+                    entidad.Correo = entity.Correo;
+
+                    context.SaveChanges();
+                }
+            }
         }
 
         public void Eliminar(int id)
         {
-            using (var context = new Context())
+            using (var context = new Context(_connection))
             {
-                var entitad = context.Autor.Where(data => data.id == id).FirstOrDefault();
+                var entitad = context.Autor.Where(data => data.Id == id).FirstOrDefault();
                 context.Autor.Remove(entitad);
                 context.SaveChanges();
             }
@@ -52,14 +60,14 @@ namespace Libreria.DAL.Repository
 
         public List<AutorEntity> Seleccionar()
         {
-            List<AutorEntity> facturas;
+            List<AutorEntity> items;
 
-            using (var context = new Context())
+            using (var context = new Context(_connection))
             {
-                facturas = context.Autor.ToList();
+                items = context.Autor.ToList();
             }
 
-            return facturas;
+            return items;
         }
     }
 }
