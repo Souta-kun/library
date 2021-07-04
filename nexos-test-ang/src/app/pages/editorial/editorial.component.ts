@@ -110,7 +110,15 @@ export class EditorialComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
-        this.consultar();
+        this.editorialService.delete(row.id).subscribe(
+          (result) => {
+            this.toastr.success("Editorial eliminada");
+            this.consultar();
+          },
+          (error) => {
+            this.toastr.error("Error eliminando editorial");
+          }
+        );
       }
     });
   }

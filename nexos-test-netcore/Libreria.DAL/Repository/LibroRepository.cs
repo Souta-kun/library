@@ -34,7 +34,22 @@ namespace Libreria.DAL.Repository
 
         public void Editar(LibroEntity entity)
         {
-            throw new NotImplementedException();
+            using (var context = new Context(_connection))
+            {
+                var entidad = context.Libro.FirstOrDefault(item => item.Id == entity.Id);
+
+                if (entidad != null)
+                {
+                    entidad.Titulo = entity.Titulo;
+                    entidad.Anio = entity.Anio;
+                    entidad.Genero = entity.Genero;
+                    entidad.Npaginas = entity.Npaginas;
+                    entidad.EditorialId = entity.EditorialId;
+                    entidad.AutorId = entity.AutorId;
+
+                    context.SaveChanges();
+                }
+            }
         }
 
         public void Eliminar(int id)

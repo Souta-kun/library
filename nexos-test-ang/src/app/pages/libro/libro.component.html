@@ -36,12 +36,31 @@
 
         <ng-container matColumnDef="editorial">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Editorial</th>
-          <td mat-cell *matCellDef="let row">{{ row.editorial }}</td>
+          <td mat-cell *matCellDef="let row">
+            <mat-form-field>
+              <mat-select [(ngModel)]="row.editorialId" disabled="true">
+                <mat-option
+                  [value]="editorial.id"
+                  *ngFor="let editorial of editoriales"
+                >
+                  {{ editorial.nombre }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="autor">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Autor</th>
-          <td mat-cell *matCellDef="let row">{{ row.autor }}</td>
+          <td mat-cell *matCellDef="let row">
+            <mat-form-field>
+              <mat-select [(ngModel)]="row.autorId" disabled="true">
+                <mat-option [value]="autor.id" *ngFor="let autor of autores">
+                  {{ autor.nombre }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="actions">

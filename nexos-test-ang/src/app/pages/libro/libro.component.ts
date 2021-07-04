@@ -15,6 +15,10 @@ import { LibroService } from "src/app/services/libro.service";
 
 import { OkCancelDialogComponent } from "src/app/shared/ok-cancel-dialog/ok-cancel-dialog.component";
 import { AddLibroDialogComponent } from "./add-libro-dialog/add-libro-dialog.component";
+import { EditorialModel } from "src/app/models/editorial.model";
+import { AutorModel } from "src/app/models/autor.model";
+import { EditorialService } from "src/app/services/editorial.service";
+import { AutorService } from "src/app/services/autor.service";
 
 @Component({
   selector: "app-libro",
@@ -22,6 +26,8 @@ import { AddLibroDialogComponent } from "./add-libro-dialog/add-libro-dialog.com
   styleUrls: ["./libro.component.css"],
 })
 export class LibroComponent implements OnInit {
+  editoriales: EditorialModel[] = [];
+  autores: AutorModel[] = [];
   displayedColumns: string[] = [
     "titulo",
     "anio",
@@ -40,13 +46,17 @@ export class LibroComponent implements OnInit {
     private spinner: NgxUiLoaderService,
     private toastr: ToastrService,
     private dialog: MatDialog,
-    private libroService: LibroService
+    private libroService: LibroService,
+    private editorialService: EditorialService,
+    private autorService: AutorService
   ) {}
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.consultar();
+    this.getEditoriales();
+    this.getAutores();
   }
 
   consultar() {
@@ -63,6 +73,24 @@ export class LibroComponent implements OnInit {
     );
   }
 
+  getEditoriales() {
+    this.editorialService.select().subscribe(
+      (result) => {
+        this.editoriales = result;
+      },
+      (error) => {}
+    );
+  }
+
+  getAutores() {
+    this.autorService.select().subscribe(
+      (result) => {
+        this.autores = result;
+      },
+      (error) => {}
+    );
+  }
+
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
@@ -75,7 +103,12 @@ export class LibroComponent implements OnInit {
     const dialog = this.dialog.open(AddLibroDialogComponent, {
       width: "300px",
       height: "auto",
-      data: { mode: CONSTANTS.DETAIL_PAGE.MODE.ADD, data: new LibroModel() },
+      data: {
+        mode: CONSTANTS.DETAIL_PAGE.MODE.ADD,
+        data: new LibroModel(),
+        editoriales: this.editoriales,
+        autores: this.autores,
+      },
     });
 
     dialog.afterClosed().subscribe((result: boolean) => {
@@ -89,7 +122,12 @@ export class LibroComponent implements OnInit {
     const dialog = this.dialog.open(AddLibroDialogComponent, {
       width: "300px",
       height: "auto",
-      data: { mode: CONSTANTS.DETAIL_PAGE.MODE.EDIT, data: row },
+      data: {
+        mode: CONSTANTS.DETAIL_PAGE.MODE.EDIT,
+        data: row,
+        editoriales: this.editoriales,
+        autores: this.autores,
+      },
     });
 
     dialog.afterClosed().subscribe((result: boolean) => {
@@ -111,8 +149,15 @@ export class LibroComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
-        this.toastr.success("Libro eliminado.");
-        this.consultar();
+        this.libroService.delete(row.id).subscribe(
+          (result) => {
+            this.toastr.success("Libro eliminado");
+            this.consultar();
+          },
+          (error) => {
+            this.toastr.error("Error eliminando Libro");
+          }
+        );
       }
     });
   }

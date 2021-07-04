@@ -1,17 +1,10 @@
 using Libreria.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Libreria.API
 {
@@ -27,15 +20,25 @@ namespace Libreria.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Adicionar configurar para acceder al appsettings.json
-            services.Configure<MyAppSettings>(Configuration.GetSection(MyAppSettings.SectionName));
-            services.AddOptions();
-            // 
             services.AddControllers();
+
+            // Habilitar CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsApi",
+                    builder => builder.WithOrigins("http://localhost:4200", "https://localhost:44307/")
+                .AllowAnyHeader()
+                .AllowAnyMethod());
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Libreria.API", Version = "v1" });
             });
+
+            // Adicionar configurar para acceder al appsettings.json
+            services.Configure<MyAppSettings>(Configuration.GetSection(MyAppSettings.SectionName));
+            services.AddOptions();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +54,9 @@ namespace Libreria.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors("CorsApi");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

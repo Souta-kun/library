@@ -106,7 +106,15 @@ export class AutorComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
-        this.consultar();
+        this.autorService.delete(row.id).subscribe(
+          (result) => {
+            this.toastr.success("Autor eliminado");
+            this.consultar();
+          },
+          (error) => {
+            this.toastr.error("Error eliminando Autor");
+          }
+        );
       }
     });
   }

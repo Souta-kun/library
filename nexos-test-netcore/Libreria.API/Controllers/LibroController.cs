@@ -1,6 +1,7 @@
 ﻿using Libreria.API.Services;
 using Libreria.BLL.Services;
 using Libreria.DTO.Entity;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace Libreria.API.Controllers
 {
+    [EnableCors("CorsApi")]
     [ApiController]
     [Route("[controller]")]
     public class LibroController : ControllerBase

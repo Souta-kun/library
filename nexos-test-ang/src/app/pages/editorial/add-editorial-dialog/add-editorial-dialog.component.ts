@@ -1,7 +1,10 @@
 import { Component, OnInit, Inject } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { ToastrService } from "ngx-toastr";
+import { NgxUiLoaderService } from "ngx-ui-loader";
 import { EditorialModel } from "src/app/models/editorial.model";
+import { EditorialService } from "src/app/services/editorial.service";
 import { CONSTANTS } from "src/app/shared/constants";
 import { OkCancelDialogComponent } from "src/app/shared/ok-cancel-dialog/ok-cancel-dialog.component";
 import { AddLibroDialogComponent } from "../../libro/add-libro-dialog/add-libro-dialog.component";
@@ -20,12 +23,17 @@ export class AddEditorialDialogComponent implements OnInit {
   form: FormGroup;
   title: string;
   CONST = CONSTANTS.DETAIL_PAGE;
+  data: IData;
 
   constructor(
+    private spinner: NgxUiLoaderService,
+    private toastr: ToastrService,
+    private editorialService: EditorialService,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<AddLibroDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data: IData
   ) {
+    this.data = data;
     this.title = `${
       data.mode == this.CONST.MODE.ADD
         ? this.CONST.ADICIONAR
@@ -49,7 +57,7 @@ export class AddEditorialDialogComponent implements OnInit {
   ngOnInit() {}
 
   onSalir() {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
   onSubmit() {
@@ -64,6 +72,36 @@ export class AddEditorialDialogComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
+        let body = new EditorialModel();
+        body.id = this.data.data.id;
+        body.correo = this.form.value.correo;
+        body.direccionCorrespondencia =
+          this.form.value.direccionCorrespondencia;
+        body.maxLibroRegistrado = +this.form.value.maxLibroRegistrado;
+        body.nombre = this.form.value.nombre;
+        body.telefono = this.form.value.telefono;
+
+        if (this.data.mode == this.CONST.MODE.ADD) {
+          this.editorialService.create(body).subscribe(
+            (result) => {
+              this.toastr.success("Editorial agregada");
+              this.dialogRef.close(true);
+            },
+            (error) => {
+              this.toastr.error("Error creando Editorial");
+            }
+          );
+        } else {
+          this.editorialService.update(body).subscribe(
+            (result) => {
+              this.toastr.success("Editorial actualizada");
+              this.dialogRef.close(true);
+            },
+            (error) => {
+              this.toastr.error("Error actualizando Editorial");
+            }
+          );
+        }
       }
     });
   }

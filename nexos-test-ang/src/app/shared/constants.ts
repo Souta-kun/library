@@ -10,9 +10,9 @@ export const CONSTANTS = {
     },
   },
   CONTROLLER: {
-    Libro: "Libro",
-    Autor: "Autor",
-    Editorial: "Editorial",
+    Libro: "libro/",
+    Autor: "autor/",
+    Editorial: "editorial/",
   },
   MENU: [
     new MenuModel("Libros", "libro"),
