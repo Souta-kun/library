@@ -12,11 +12,13 @@ namespace Libreria.DAL.Repository
     {
         private readonly string _connection;
         private readonly EditorialRepository _editorialRepository;
+        private readonly AutorRepository _autorRepository;
 
         public LibroRepository(string connection) 
         { 
             _connection = connection; 
-            _editorialRepository = new EditorialRepository(connection); 
+            _editorialRepository = new EditorialRepository(connection);
+            _autorRepository = new AutorRepository(connection);
         }
 
         public void Adicionar(LibroEntity entity)
@@ -78,6 +80,15 @@ namespace Libreria.DAL.Repository
             using (var context = new Context(_connection))
             {
                 items = context.Libro.ToList();
+            }
+
+            var editoriales = _editorialRepository.Seleccionar();
+            var autores = _autorRepository.Seleccionar();
+
+            foreach (var item in items)
+            {
+                item.Editorial = editoriales.Find(row => row.Id == item.EditorialId)?.Nombre;
+                item.Autor = autores.Find(row => row.Id == item.AutorId)?.Nombre;
             }
 
             return items;

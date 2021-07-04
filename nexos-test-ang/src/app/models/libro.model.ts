@@ -6,4 +6,6 @@ export class LibroModel {
   npaginas: number;
   editorialId: number;
   autorId: number;
+  editorial: string;
+  autor: string;
 }

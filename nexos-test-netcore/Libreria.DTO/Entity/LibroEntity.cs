@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Libreria.DTO.Entity
@@ -15,5 +16,10 @@ namespace Libreria.DTO.Entity
         public int Npaginas { get; set; }
         public int EditorialId { get; set; }
         public int AutorId { get; set; }
+        [NotMapped]
+        public string Editorial { get; set; }
+        [NotMapped]
+        public string Autor { get; set; }
+
     }
 }
