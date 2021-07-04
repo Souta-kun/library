@@ -1,2 +1,0 @@
-# nexos-test
-Prueba técnica

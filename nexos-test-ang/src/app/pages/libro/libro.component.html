@@ -1,0 +1,83 @@
+<h3><strong>Libros</strong></h3>
+<hr />
+<div class="card">
+  <div class="card-body">
+    <mat-form-field>
+      <input
+        matInput
+        (keyup)="applyFilter($event.target.value)"
+        placeholder="Filtro"
+      />
+    </mat-form-field>
+
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="titulo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Titulo</th>
+          <td mat-cell *matCellDef="let row">{{ row.titulo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="anio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Año</th>
+          <td mat-cell *matCellDef="let row">{{ row.anio }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="genero">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Genero</th>
+          <td mat-cell *matCellDef="let row">{{ row.genero }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="npaginas">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header># Paginas</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.npaginas }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="editorial">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Editorial</th>
+          <td mat-cell *matCellDef="let row">{{ row.editorial }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="autor">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Autor</th>
+          <td mat-cell *matCellDef="let row">{{ row.autor }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-icon
+              svgIcon="plus"
+              style="cursor: pointer"
+              (click)="onAdd()"
+              matTooltip="Adicionar"
+              matTooltipPosition="above"
+            ></mat-icon>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-icon
+              svgIcon="pencil"
+              style="cursor: pointer"
+              (click)="onEdit(row)"
+              matTooltip="Editar"
+              matTooltipPosition="above"
+            ></mat-icon>
+
+            <mat-icon
+              svgIcon="trash"
+              style="cursor: pointer"
+              (click)="onDelete(row)"
+              matTooltip="Guardar"
+              matTooltipPosition="above"
+            ></mat-icon>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
+    </div>
+  </div>
+</div>

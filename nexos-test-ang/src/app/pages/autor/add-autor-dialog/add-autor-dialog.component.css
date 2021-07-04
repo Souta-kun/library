@@ -1,0 +1,9 @@
+mat-form-field {
+  display: block;
+  min-width: 80px;
+  width: 100%;
+}
+
+mat-icon {
+  transform: scale(0.7);
+}
