@@ -105,6 +105,12 @@ export class AddLibroDialogComponent implements OnInit {
               this.dialogRef.close(true);
             },
             (error) => {
+              if (error.error.includes("MAXIMO_LIBRO_SUPERADO")) {
+                this.toastr.warning(
+                  "No es posible registrar el libro, se alcanzo el maximo permitido"
+                );
+                return;
+              }
               this.toastr.error("Error creando Libro");
             }
           );
@@ -115,6 +121,20 @@ export class AddLibroDialogComponent implements OnInit {
               this.dialogRef.close(true);
             },
             (error) => {
+              if (error.error.includes("MAXIMO_LIBRO_SUPERADO")) {
+                this.toastr.warning(
+                  "No es posible registrar el libro, se alcanzo el maximo permitido"
+                );
+                return;
+              }
+              if (error.error.includes("FK_Libro_Autor_Id")) {
+                this.toastr.warning("El autor no esta registrado");
+                return;
+              }
+              if (error.error.includes("FK_Editorial_Autor_Id")) {
+                this.toastr.warning("La editorial no esta registrada");
+                return;
+              }
               this.toastr.error("Error actualizando libro");
             }
           );

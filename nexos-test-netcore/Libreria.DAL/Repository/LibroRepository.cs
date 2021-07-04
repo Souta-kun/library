@@ -11,13 +11,20 @@ namespace Libreria.DAL.Repository
     public class LibroRepository : IRepository<LibroEntity>
     {
         private readonly string _connection;
+        private readonly EditorialRepository _editorialRepository;
 
-        public LibroRepository(string connection) { _connection = connection; }
+        public LibroRepository(string connection) 
+        { 
+            _connection = connection; 
+            _editorialRepository = new EditorialRepository(connection); 
+        }
 
         public void Adicionar(LibroEntity entity)
         {
             using (var context = new Context(_connection))
             {
+                ValidarMaximoLibros(entity.EditorialId);
+
                 var data = new LibroEntity();
                 data.Titulo = entity.Titulo;
                 data.Anio = entity.Anio;
@@ -36,6 +43,8 @@ namespace Libreria.DAL.Repository
         {
             using (var context = new Context(_connection))
             {
+                ValidarMaximoLibros(entity.EditorialId);
+
                 var entidad = context.Libro.FirstOrDefault(item => item.Id == entity.Id);
 
                 if (entidad != null)
@@ -73,5 +82,30 @@ namespace Libreria.DAL.Repository
 
             return items;
         }
+
+        #region Private 
+        /// <summary>
+        /// Metodo para validar que no se supere el maximo de libros permitidos
+        /// </summary>
+        /// <param name="editorialId"></param>
+        private void ValidarMaximoLibros(int editorialId)
+        {
+            var editorial = _editorialRepository.Seleccionar(editorialId);
+
+            if (editorial != null)
+            {
+                var librosEditorial = Seleccionar().FindAll(libro => libro.EditorialId == editorialId);
+
+                if (editorial.MaxLibroRegistrado == -1)
+                {
+                    return;
+                }
+                else if (editorial.MaxLibroRegistrado <= librosEditorial.Count())
+                {
+                    throw new Exception("MAXIMO_LIBRO_SUPERADO");
+                }
+            }
+        }
+        #endregion
     }
 }

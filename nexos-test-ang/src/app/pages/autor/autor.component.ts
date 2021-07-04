@@ -112,6 +112,12 @@ export class AutorComponent implements OnInit {
             this.consultar();
           },
           (error) => {
+            if (error.error.includes("FK_Libro_Autor_Id")) {
+              this.toastr.warning(
+                "No es posible eliminar el registro, se encuentra en uso"
+              );
+              return;
+            }
             this.toastr.error("Error eliminando Autor");
           }
         );

@@ -71,5 +71,7 @@ namespace Libreria.DAL.Repository
 
             return items;
         }
+
+        public EditorialEntity Seleccionar(int id) => this.Seleccionar().Find(ed => ed.Id == id);        
     }
 }

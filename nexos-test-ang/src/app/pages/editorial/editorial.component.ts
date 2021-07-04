@@ -116,6 +116,12 @@ export class EditorialComponent implements OnInit {
             this.consultar();
           },
           (error) => {
+            if (error.error.includes("FK_Libro_Editorial_Id")) {
+              this.toastr.warning(
+                "No es posible eliminar el registro, se encuentra en uso"
+              );
+              return;
+            }
             this.toastr.error("Error eliminando editorial");
           }
         );

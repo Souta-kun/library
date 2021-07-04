@@ -26,6 +26,8 @@ CREATE TABLE [LIBRERIA_CABS].[dbo].[Libro] (
   Anio INT NOT NULL,
   Genero VARCHAR(150) NOT NULL,
   Npaginas INT NOT NULL,
-  EditorialId INT NOT NULL FOREIGN KEY REFERENCES Editorial(Id),
-  AutorId INT NOT NULL FOREIGN KEY REFERENCES Autor(Id)
+  EditorialId INT NOT NULL, 
+  AutorId INT NOT NULL, 
+  CONSTRAINT FK_Libro_Editorial_Id FOREIGN KEY (EditorialId) REFERENCES Editorial(Id),
+  CONSTRAINT FK_Libro_Autor_Id FOREIGN KEY (AutorId) REFERENCES Autor(Id)
 );
