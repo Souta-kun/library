@@ -23,7 +23,6 @@ import {
   MatIconModule,
 } from "@angular/material";
 
-import { NgxSpinnerModule } from "ngx-spinner";
 import { ToastrModule } from "ngx-toastr";
 import { NgxUiLoaderModule } from "ngx-ui-loader";
 import "hammerjs";
@@ -52,7 +51,6 @@ import { OkCancelDialogComponent } from "./ok-cancel-dialog/ok-cancel-dialog.com
     MatTooltipModule,
     // features installed
     ToastrModule.forRoot(),
-    NgxSpinnerModule,
     NgxUiLoaderModule,
   ],
   exports: [
@@ -80,7 +78,6 @@ import { OkCancelDialogComponent } from "./ok-cancel-dialog/ok-cancel-dialog.com
     MatIconModule,
     // features installed
     ToastrModule,
-    NgxSpinnerModule,
     NgxUiLoaderModule,
   ],
   entryComponents: [OkCancelDialogComponent],
