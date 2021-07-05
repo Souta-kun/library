@@ -1,4 +1,5 @@
-﻿using Libreria.DAL.Database;
+﻿using Libreria.Common.Extension;
+using Libreria.DAL.Database;
 using Libreria.DAL.Interfaces;
 using Libreria.DTO.Entity;
 using System;
@@ -37,7 +38,23 @@ namespace Libreria.DAL.Repository
 
                 context.Libro.Add(data);
 
-                context.SaveChanges();
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null
+                        && ex.InnerException.Message.Contains("FK_Libro_Autor_Id"))
+                    {
+                        ExceptionUtil.GetInstance().Get("El autor no esta registrado", ex.StackTrace);
+                    }
+                    if (ex.InnerException != null
+                        && ex.InnerException.Message.Contains("FK_Libro_Editorial_Id"))
+                    {
+                        ExceptionUtil.GetInstance().Get("La editorial no esta registrada", ex.StackTrace);
+                    }
+                }
             }
         }
 
@@ -58,7 +75,23 @@ namespace Libreria.DAL.Repository
                     entidad.EditorialId = entity.EditorialId;
                     entidad.AutorId = entity.AutorId;
 
-                    context.SaveChanges();
+                    try
+                    {
+                        context.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex.InnerException != null
+                            && ex.InnerException.Message.Contains("FK_Libro_Autor_Id"))
+                        {
+                            ExceptionUtil.GetInstance().Get("El autor no esta registrado", ex.StackTrace);
+                        }
+                        if (ex.InnerException != null
+                            && ex.InnerException.Message.Contains("FK_Libro_Editorial_Id"))
+                        {
+                            ExceptionUtil.GetInstance().Get("La editorial no esta registrada", ex.StackTrace);
+                        }
+                    }
                 }
             }
         }
@@ -113,7 +146,7 @@ namespace Libreria.DAL.Repository
                 }
                 else if (editorial.MaxLibroRegistrado <= librosEditorial.Count())
                 {
-                    throw new Exception("MAXIMO_LIBRO_SUPERADO");
+                    ExceptionUtil.GetInstance().Get("No es posible registrar el libro, se alcanzo el maximo permitido", null);
                 }
             }
         }

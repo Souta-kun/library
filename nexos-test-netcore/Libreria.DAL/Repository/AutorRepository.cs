@@ -1,5 +1,7 @@
-﻿using Libreria.DAL.Database;
+﻿using Libreria.Common.Extension;
+using Libreria.DAL.Database;
 using Libreria.DAL.Interfaces;
+using Libreria.DTO;
 using Libreria.DTO.Entity;
 using System;
 using System.Collections.Generic;
@@ -54,7 +56,19 @@ namespace Libreria.DAL.Repository
             {
                 var entitad = context.Autor.Where(data => data.Id == id).FirstOrDefault();
                 context.Autor.Remove(entitad);
-                context.SaveChanges();
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null 
+                        && ex.InnerException.Message.Contains("DELETE")
+                        && ex.InnerException.Message.Contains("FK_Libro_Autor_Id"))
+                    {
+                        ExceptionUtil.GetInstance().Get("No es posible eliminar el registro, se encuentra en uso", ex.StackTrace);
+                    }
+                }
             }
         }
 

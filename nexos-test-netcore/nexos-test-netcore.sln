@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libreria.API", "Libreria.API\Libreria.API.csproj", "{0721784E-222E-4DF7-A5E1-848CF9AA8785}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Libreria.API", "Libreria.API\Libreria.API.csproj", "{0721784E-222E-4DF7-A5E1-848CF9AA8785}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libreria.DTO", "Libreria.DTO\Libreria.DTO.csproj", "{37257591-48AE-4AA7-B54C-71543787B50B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Libreria.DTO", "Libreria.DTO\Libreria.DTO.csproj", "{37257591-48AE-4AA7-B54C-71543787B50B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libreria.BLL", "Libreria.BLL\Libreria.BLL.csproj", "{8DB94765-EE4F-49D5-9655-136C01AB166C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Libreria.BLL", "Libreria.BLL\Libreria.BLL.csproj", "{8DB94765-EE4F-49D5-9655-136C01AB166C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libreria.DAL", "Libreria.DAL\Libreria.DAL.csproj", "{A34AD1C0-E311-430D-B505-A29C7E32FB7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Libreria.DAL", "Libreria.DAL\Libreria.DAL.csproj", "{A34AD1C0-E311-430D-B505-A29C7E32FB7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Libreria.Common", "Libreria.Common\Libreria.Common.csproj", "{EA1A26AF-04B7-492E-AA35-67F6FDF51626}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A34AD1C0-E311-430D-B505-A29C7E32FB7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A34AD1C0-E311-430D-B505-A29C7E32FB7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A34AD1C0-E311-430D-B505-A29C7E32FB7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA1A26AF-04B7-492E-AA35-67F6FDF51626}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA1A26AF-04B7-492E-AA35-67F6FDF51626}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA1A26AF-04B7-492E-AA35-67F6FDF51626}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA1A26AF-04B7-492E-AA35-67F6FDF51626}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

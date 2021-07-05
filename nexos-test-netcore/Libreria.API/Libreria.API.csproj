@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Libreria.BLL\Libreria.BLL.csproj" />
+    <ProjectReference Include="..\Libreria.Common\Libreria.Common.csproj" />
     <ProjectReference Include="..\Libreria.DTO\Libreria.DTO.csproj" />
   </ItemGroup>
 
