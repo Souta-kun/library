@@ -11,29 +11,17 @@ namespace Libreria.BLL.Services
     {
         private readonly AutorRepository repo;
 
-        public AutorService(string connection)
+        public AutorService(AutorRepository _repo)
         {
-            repo = new AutorRepository(connection);
+            repo = _repo;
         }
 
-        public void Adicionar(AutorEntity entity)
-        {
-            repo.Adicionar(entity);
-        }
+        public void Adicionar(AutorEntity entity) => repo.Add(entity);
 
-        public void Editar(AutorEntity entity)
-        {
-            repo.Editar(entity);
-        }
+        public void Editar(AutorEntity entity) => repo.Edit(entity);
 
-        public void Eliminar(int id)
-        {
-            repo.Eliminar(id);
-        }
+        public void Eliminar(int id) => repo.Delete(id);
 
-        public List<AutorEntity> Seleccionar()
-        {
-            return repo.Seleccionar();
-        }
+        public List<AutorEntity> Seleccionar() => repo.Select();
     }
 }

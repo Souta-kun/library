@@ -6,9 +6,9 @@ namespace Libreria.DAL.Interfaces
 {
     public interface IRepository<T>
     {
-        List<T> Seleccionar();
-        void Adicionar(T entity);
-        void Editar(T entity);
-        void Eliminar(int id);
+        List<T> Select();
+        void Add(T entity);
+        void Edit(T entity);
+        void Delete(int id);
     }
 }

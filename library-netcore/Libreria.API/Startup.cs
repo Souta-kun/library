@@ -1,7 +1,10 @@
 using Libreria.API.Base;
-using Libreria.API.Services;
+using Libreria.BLL.Services;
+using Libreria.DAL.Database;
+using Libreria.DAL.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -39,8 +42,18 @@ namespace Libreria.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Libreria.API", Version = "v1" });
             });
 
-            // Adicionar configurar para acceder al appsettings.json
-            services.Configure<MyAppSettings>(Configuration.GetSection(MyAppSettings.SectionName));
+            services.AddDbContext<Context>(options 
+                => options.UseSqlServer(Configuration.GetConnectionString("SQLServerConnection"))
+                );
+
+            services.AddScoped<Context>();
+            services.AddScoped<EditorialRepository>();
+            services.AddScoped<AutorRepository>();
+            services.AddScoped<LibroRepository>();
+            services.AddScoped<EditorialService>();
+            services.AddScoped<AutorService>();
+            services.AddScoped<LibroService>();
+
             services.AddOptions();
         }
 

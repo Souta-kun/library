@@ -12,76 +12,57 @@ namespace Libreria.DAL.Repository
 {
     public class AutorRepository : IRepository<AutorEntity>
     {
-        private readonly string _connection;
+        private readonly Context context;
 
-        public AutorRepository(string connection) { _connection = connection; }
+        public AutorRepository(Context _context) { context = _context; }
 
-        public void Adicionar(AutorEntity entity)
+        public void Add(AutorEntity entity)
         {
-            using (var context = new Context(_connection))
-            {
-                var data = new AutorEntity();
-                data.Nombre = entity.Nombre;
-                data.FechaNacimiento = entity.FechaNacimiento;
-                data.Ciudad = entity.Ciudad;
-                data.Correo = entity.Correo;
+            var data = new AutorEntity();
+            data.Nombre = entity.Nombre;
+            data.FechaNacimiento = entity.FechaNacimiento;
+            data.Ciudad = entity.Ciudad;
+            data.Correo = entity.Correo;
 
-                context.Autor.Add(data);
+            context.Autor.Add(data);
+
+            context.SaveChanges();
+        }
+
+        public void Edit(AutorEntity entity)
+        {
+            var entidad = context.Autor.FirstOrDefault(item => item.Id == entity.Id);
+
+            if (entidad != null)
+            {
+                entidad.Nombre = entity.Nombre;
+                entidad.FechaNacimiento = entity.FechaNacimiento;
+                entidad.Ciudad = entity.Ciudad;
+                entidad.Correo = entity.Correo;
 
                 context.SaveChanges();
             }
         }
 
-        public void Editar(AutorEntity entity)
+        public void Delete(int id)
         {
-            using (var context = new Context(_connection))
+            var entitad = context.Autor.Where(data => data.Id == id).FirstOrDefault();
+            context.Autor.Remove(entitad);
+            try
             {
-                var entidad = context.Autor.FirstOrDefault(item => item.Id == entity.Id);
-
-                if (entidad != null)
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null
+                    && ex.InnerException.Message.Contains("DELETE")
+                    && ex.InnerException.Message.Contains("FK_Libro_Autor_Id"))
                 {
-                    entidad.Nombre = entity.Nombre;
-                    entidad.FechaNacimiento = entity.FechaNacimiento;
-                    entidad.Ciudad = entity.Ciudad;
-                    entidad.Correo = entity.Correo;
-
-                    context.SaveChanges();
+                    ExceptionUtil.GetInstance().Get("No es posible eliminar el registro, se encuentra en uso", ex.StackTrace);
                 }
             }
         }
 
-        public void Eliminar(int id)
-        {
-            using (var context = new Context(_connection))
-            {
-                var entitad = context.Autor.Where(data => data.Id == id).FirstOrDefault();
-                context.Autor.Remove(entitad);
-                try
-                {
-                    context.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.InnerException != null 
-                        && ex.InnerException.Message.Contains("DELETE")
-                        && ex.InnerException.Message.Contains("FK_Libro_Autor_Id"))
-                    {
-                        ExceptionUtil.GetInstance().Get("No es posible eliminar el registro, se encuentra en uso", ex.StackTrace);
-                    }
-                }
-            }
-        }
-
-        public List<AutorEntity> Seleccionar()
-        {
-            List<AutorEntity> items;
-
-            using (var context = new Context(_connection))
-            {
-                items = context.Autor.ToList();
-            }
-
-            return items;
-        }
+        public List<AutorEntity> Select() => context.Autor.ToList();
     }
 }

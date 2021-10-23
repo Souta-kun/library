@@ -1,17 +1,8 @@
-﻿using Libreria.API.Services;
-using Libreria.BLL.Services;
+﻿using Libreria.BLL.Services;
 using Libreria.DTO.Entity;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace Libreria.API.Controllers
 {
@@ -20,15 +11,11 @@ namespace Libreria.API.Controllers
     [Route("[controller]")]
     public class EditorialController : ControllerBase
     {
-        private readonly ILogger<LibroController> _logger;
-        private readonly IOptions<MyAppSettings> _options;
         private readonly EditorialService EditorialService;
 
-        public EditorialController(ILogger<LibroController> logger, IOptions<MyAppSettings> options)
+        public EditorialController(EditorialService _EditorialService)
         {
-            _logger = logger;
-            _options = options;
-            EditorialService = new EditorialService(_options.Value.SQLServerConnection);
+            EditorialService = _EditorialService;
         }
 
         [HttpGet]

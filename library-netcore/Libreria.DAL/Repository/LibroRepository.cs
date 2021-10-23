@@ -11,32 +11,67 @@ namespace Libreria.DAL.Repository
 {
     public class LibroRepository : IRepository<LibroEntity>
     {
-        private readonly string _connection;
-        private readonly EditorialRepository _editorialRepository;
-        private readonly AutorRepository _autorRepository;
+        private readonly Context context;
+        private readonly EditorialRepository editorialRepository;
+        private readonly AutorRepository autorRepository;
 
-        public LibroRepository(string connection) 
+        public LibroRepository(
+            Context _context, 
+            EditorialRepository _editorialRepository, 
+            AutorRepository _autorRepository) 
         { 
-            _connection = connection; 
-            _editorialRepository = new EditorialRepository(connection);
-            _autorRepository = new AutorRepository(connection);
+            context = _context;
+            editorialRepository = _editorialRepository;
+            autorRepository = _autorRepository;
         }
 
-        public void Adicionar(LibroEntity entity)
+        public void Add(LibroEntity entity)
         {
-            using (var context = new Context(_connection))
+            ValidarMaximoLibros(entity.EditorialId);
+
+            var data = new LibroEntity();
+            data.Titulo = entity.Titulo;
+            data.Anio = entity.Anio;
+            data.Genero = entity.Genero;
+            data.Npaginas = entity.Npaginas;
+            data.EditorialId = entity.EditorialId;
+            data.AutorId = entity.AutorId;
+
+            context.Libro.Add(data);
+
+            try
             {
-                ValidarMaximoLibros(entity.EditorialId);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null
+                    && ex.InnerException.Message.Contains("FK_Libro_Autor_Id"))
+                {
+                    ExceptionUtil.GetInstance().Get("El autor no esta registrado", ex.StackTrace);
+                }
+                if (ex.InnerException != null
+                    && ex.InnerException.Message.Contains("FK_Libro_Editorial_Id"))
+                {
+                    ExceptionUtil.GetInstance().Get("La editorial no esta registrada", ex.StackTrace);
+                }
+            }
+        }
 
-                var data = new LibroEntity();
-                data.Titulo = entity.Titulo;
-                data.Anio = entity.Anio;
-                data.Genero = entity.Genero;
-                data.Npaginas = entity.Npaginas;
-                data.EditorialId = entity.EditorialId;
-                data.AutorId = entity.AutorId;
+        public void Edit(LibroEntity entity)
+        {
+            ValidarMaximoLibros(entity.EditorialId);
 
-                context.Libro.Add(data);
+            var entidad = context.Libro.FirstOrDefault(item => item.Id == entity.Id);
+
+            if (entidad != null)
+            {
+                entidad.Titulo = entity.Titulo;
+                entidad.Anio = entity.Anio;
+                entidad.Genero = entity.Genero;
+                entidad.Npaginas = entity.Npaginas;
+                entidad.EditorialId = entity.EditorialId;
+                entidad.AutorId = entity.AutorId;
 
                 try
                 {
@@ -58,65 +93,19 @@ namespace Libreria.DAL.Repository
             }
         }
 
-        public void Editar(LibroEntity entity)
+        public void Delete(int id)
         {
-            using (var context = new Context(_connection))
-            {
-                ValidarMaximoLibros(entity.EditorialId);
-
-                var entidad = context.Libro.FirstOrDefault(item => item.Id == entity.Id);
-
-                if (entidad != null)
-                {
-                    entidad.Titulo = entity.Titulo;
-                    entidad.Anio = entity.Anio;
-                    entidad.Genero = entity.Genero;
-                    entidad.Npaginas = entity.Npaginas;
-                    entidad.EditorialId = entity.EditorialId;
-                    entidad.AutorId = entity.AutorId;
-
-                    try
-                    {
-                        context.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex.InnerException != null
-                            && ex.InnerException.Message.Contains("FK_Libro_Autor_Id"))
-                        {
-                            ExceptionUtil.GetInstance().Get("El autor no esta registrado", ex.StackTrace);
-                        }
-                        if (ex.InnerException != null
-                            && ex.InnerException.Message.Contains("FK_Libro_Editorial_Id"))
-                        {
-                            ExceptionUtil.GetInstance().Get("La editorial no esta registrada", ex.StackTrace);
-                        }
-                    }
-                }
-            }
+            var entitad = context.Libro.Where(data => data.Id == id).FirstOrDefault();
+            context.Libro.Remove(entitad);
+            context.SaveChanges();
         }
 
-        public void Eliminar(int id)
+        public List<LibroEntity> Select()
         {
-            using (var context = new Context(_connection))
-            {
-                var entitad = context.Libro.Where(data => data.Id == id).FirstOrDefault();
-                context.Libro.Remove(entitad);
-                context.SaveChanges();
-            }
-        }
+            List<LibroEntity> items = context.Libro.ToList();
 
-        public List<LibroEntity> Seleccionar()
-        {
-            List<LibroEntity> items;
-
-            using (var context = new Context(_connection))
-            {
-                items = context.Libro.ToList();
-            }
-
-            var editoriales = _editorialRepository.Seleccionar();
-            var autores = _autorRepository.Seleccionar();
+            var editoriales = editorialRepository.Select();
+            var autores = autorRepository.Select();
 
             foreach (var item in items)
             {
@@ -134,11 +123,11 @@ namespace Libreria.DAL.Repository
         /// <param name="editorialId"></param>
         private void ValidarMaximoLibros(int editorialId)
         {
-            var editorial = _editorialRepository.Seleccionar(editorialId);
+            var editorial = editorialRepository.Seleccionar(editorialId);
 
             if (editorial != null)
             {
-                var librosEditorial = Seleccionar().FindAll(libro => libro.EditorialId == editorialId);
+                var librosEditorial = Select().FindAll(libro => libro.EditorialId == editorialId);
 
                 if (editorial.MaxLibroRegistrado == -1)
                 {

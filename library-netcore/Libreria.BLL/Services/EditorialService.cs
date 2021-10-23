@@ -11,29 +11,17 @@ namespace Libreria.BLL.Services
     {
         private readonly EditorialRepository repo;
 
-        public EditorialService(string connection)
+        public EditorialService(EditorialRepository _repo)
         {
-            repo = new EditorialRepository(connection);
+            repo = _repo;
         }
 
-        public void Adicionar(EditorialEntity entity)
-        {
-            repo.Adicionar(entity);
-        }
+        public void Adicionar(EditorialEntity entity) => repo.Add(entity);
 
-        public void Editar(EditorialEntity entity)
-        {
-            repo.Editar(entity);
-        }
+        public void Editar(EditorialEntity entity) => repo.Edit(entity);
 
-        public void Eliminar(int id)
-        {
-            repo.Eliminar(id);
-        }
+        public void Eliminar(int id) => repo.Delete(id);
 
-        public List<EditorialEntity> Seleccionar()
-        {
-            return repo.Seleccionar();
-        }
+        public List<EditorialEntity> Seleccionar() => repo.Select();
     }
 }

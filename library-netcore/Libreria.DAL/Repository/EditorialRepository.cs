@@ -11,80 +11,61 @@ namespace Libreria.DAL.Repository
 {
     public class EditorialRepository : IRepository<EditorialEntity>
     {
-        private readonly string _connection;
+        private readonly Context context;
 
-        public EditorialRepository(string connection) { _connection = connection; }
+        public EditorialRepository(Context _context) { context = _context; }
 
-        public void Adicionar(EditorialEntity entity)
+        public void Add(EditorialEntity entity)
         {
-            using (var context = new Context(_connection))
-            {
-                var data = new EditorialEntity();
-                data.Nombre = entity.Nombre;
-                data.DireccionCorrespondencia = entity.DireccionCorrespondencia;
-                data.Telefono = entity.Telefono;
-                data.Correo = entity.Correo;
-                data.MaxLibroRegistrado = entity.MaxLibroRegistrado;
+            var data = new EditorialEntity();
+            data.Nombre = entity.Nombre;
+            data.DireccionCorrespondencia = entity.DireccionCorrespondencia;
+            data.Telefono = entity.Telefono;
+            data.Correo = entity.Correo;
+            data.MaxLibroRegistrado = entity.MaxLibroRegistrado;
 
-                context.Editorial.Add(data);
+            context.Editorial.Add(data);
+
+            context.SaveChanges();
+        }
+
+        public void Edit(EditorialEntity entity)
+        {
+            var entidad = context.Editorial.FirstOrDefault(item => item.Id == entity.Id);
+
+            if (entidad != null)
+            {
+                entidad.Nombre = entity.Nombre;
+                entidad.DireccionCorrespondencia = entity.DireccionCorrespondencia;
+                entidad.Telefono = entity.Telefono;
+                entidad.Correo = entity.Correo;
+                entidad.MaxLibroRegistrado = entity.MaxLibroRegistrado;
 
                 context.SaveChanges();
             }
         }
 
-        public void Editar(EditorialEntity entity)
+        public void Delete(int id)
         {
-            using (var context = new Context(_connection))
+            var entitad = context.Editorial.Where(data => data.Id == id).FirstOrDefault();
+            context.Editorial.Remove(entitad);
+            try
             {
-                var entidad = context.Editorial.FirstOrDefault(item => item.Id == entity.Id);
-
-                if (entidad != null)
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null
+                    && ex.InnerException.Message.Contains("DELETE")
+                    && ex.InnerException.Message.Contains("FK_Libro_Editorial_Id"))
                 {
-                    entidad.Nombre = entity.Nombre;
-                    entidad.DireccionCorrespondencia = entity.DireccionCorrespondencia;
-                    entidad.Telefono = entity.Telefono;
-                    entidad.Correo = entity.Correo;
-                    entidad.MaxLibroRegistrado = entity.MaxLibroRegistrado;
-
-                    context.SaveChanges();
+                    ExceptionUtil.GetInstance().Get("No es posible eliminar el registro, se encuentra en uso", ex.StackTrace);
                 }
             }
         }
 
-        public void Eliminar(int id)
-        {
-            using (var context = new Context(_connection))
-            {
-                var entitad = context.Editorial.Where(data => data.Id == id).FirstOrDefault();
-                context.Editorial.Remove(entitad);
-                try
-                {
-                    context.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.InnerException != null
-                        && ex.InnerException.Message.Contains("DELETE")
-                        && ex.InnerException.Message.Contains("FK_Libro_Editorial_Id"))
-                    {
-                        ExceptionUtil.GetInstance().Get("No es posible eliminar el registro, se encuentra en uso", ex.StackTrace);
-                    }
-                }
-            }
-        }
+        public List<EditorialEntity> Select() => context.Editorial.ToList();
 
-        public List<EditorialEntity> Seleccionar()
-        {
-            List<EditorialEntity> items;
-
-            using (var context = new Context(_connection))
-            {
-                items = context.Editorial.ToList();
-            }
-
-            return items;
-        }
-
-        public EditorialEntity Seleccionar(int id) => this.Seleccionar().Find(ed => ed.Id == id);        
+        public EditorialEntity Seleccionar(int id) => this.Select().Find(ed => ed.Id == id);        
     }
 }

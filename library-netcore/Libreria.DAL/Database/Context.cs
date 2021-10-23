@@ -11,28 +11,7 @@ namespace Libreria.DAL.Database
 {
     public class Context : DbContext
     {
-        private string SQLSERVERConnection;
-
         public Context(DbContextOptions<Context> contextOptions) : base(contextOptions) { }
-        public Context(string connection)
-        {
-            SQLSERVERConnection = connection;
-        }
-        public Context()
-        {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(SQLSERVERConnection, builder =>
-                {
-                    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-                });
-                base.OnConfiguring(optionsBuilder);
-            }
-        }
 
         public DbSet<AutorEntity> Autor { get; set; }
         public DbSet<EditorialEntity> Editorial { get; set; }
